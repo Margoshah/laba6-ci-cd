@@ -29,15 +29,15 @@ jobs:
           uvicorn main:app --host 127.0.0.1 --port 8000 &
           sleep 5
 
-      # 1. Запуск Unit-тестов (исправил название файла под твой)
+      # 1. Запуск Unit-тестов
       - name: Run Unit Tests
-        run: pytest tests/test_ticket.py --alluredir=allure-results
+        run: pytest tests/test_ticketprice.py --alluredir=allure-results
 
       # 2. Запуск BDD тестов (Behave)
       - name: Run BDD Tests
         run: behave features/ticket.feature
 
-      # 3. Запуск UI тестов (исправил название файла)
+      # 3. Запуск UI тестов
       - name: Run UI Tests
         run: pytest tests/test_ticket.py --alluredir=allure-results
 
