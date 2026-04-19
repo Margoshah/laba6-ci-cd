@@ -1,0 +1,97 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
+
+body {
+    font-family: 'Inter', sans-serif;
+    background: linear-gradient(135deg, #fff5f7 0%, #f0efff 100%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+.container {
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(10px);
+    padding: 40px;
+    border-radius: 20px;
+    width: 380px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+h2 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 25px;
+    font-weight: 600;
+}
+
+input, select {
+    width: 100%;
+    box-sizing: border-box;
+    margin-bottom: 15px;
+    padding: 12px 15px;
+    border-radius: 12px;
+    border: 1.5px solid #eee;
+    background: #fdfdfd;
+    transition: all 0.3s ease;
+    font-size: 14px;
+}
+
+input:focus, select:focus {
+    outline: none;
+    border-color: #4a90e2;
+    box-shadow: 0 0 0 4px rgba(74, 144, 226, 0.1);
+}
+
+
+.buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+button {
+    cursor: pointer;
+    font-weight: 600;
+    transition: transform 0.2s, background 0.3s;
+    height: 45px;
+    border: none;
+    border-radius: 12px;
+    font-size: 14px;
+}
+
+.btn-main {
+    flex: 2; /* Основная кнопка шире */
+    background: #2d5afc; /* Красивый сине-голубой */
+    color: white;
+}
+
+.btn-main:hover {
+    background: #1a44db;
+    transform: translateY(-2px);
+}
+
+.btn-clear {
+    flex: 1; /* Кнопка очистки уже */
+    background: #f1f3f5;
+    color: #666;
+}
+
+.btn-clear:hover {
+    background: #e9ecef;
+}
+
+#result {
+    margin-top: 20px;
+    padding: 15px;
+    border-radius: 12px;
+    background: #f8f9fa;
+    min-height: 20px;
+    text-align: center;
+    font-size: 15px;
+    color: #2d5afc;
+    font-weight: 600;
+    border: 1px dashed #dee2e6;
+}

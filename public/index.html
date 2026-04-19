@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Расчет авиабилета</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h2>Расчет авиабилета</h2>
+
+        <input id="passport" type="text" placeholder="Номер паспорта (напр. AB123)">
+
+        <select id="class">
+            <option value="">Выберите класс</option>
+            <option value="economy">Economy</option>
+            <option value="business">Business</option>
+        </select>
+
+        <input id="baggage" type="number" placeholder="Вес багажа (кг)">
+
+        <div class="buttons">
+            <button class="btn-main" id="calculateBtn" onclick="send()">Рассчитать</button>
+            <button class="btn-clear" id="clearBtn" onclick="clearForm()">Очистить</button>
+        </div>
+
+        <div id="result">Здесь будет стоимость...</div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
