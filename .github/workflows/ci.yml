@@ -21,6 +21,7 @@ jobs:
       - name: Install dependencies
         run: |
           pip install -r requirements.txt
+          pip install httpx pytest-asyncio
           playwright install --with-deps
 
       # Запуск сервера в фоне, чтобы тесты могли к нему обращаться
