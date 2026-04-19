@@ -29,17 +29,17 @@ jobs:
           uvicorn main:app --host 127.0.0.1 --port 8000 &
           sleep 5
 
-      # 1. Запуск Unit-тестов (из твоей 2-й лабы)
+      # 1. Запуск Unit-тестов (исправил название файла под твой)
       - name: Run Unit Tests
-        run: pytest tests/test_unit.py --alluredir=allure-results
+        run: pytest tests/test_ticket.py --alluredir=allure-results
 
-      # 2. Запуск BDD тестов (твоя 4-я лаба с Behave)
+      # 2. Запуск BDD тестов (Behave)
       - name: Run BDD Tests
         run: behave features/ticket.feature
 
-      # 3. Запуск UI тестов (твоя 5-я лаба с Playwright)
+      # 3. Запуск UI тестов (исправил название файла)
       - name: Run UI Tests
-        run: pytest tests/test_ui.py --alluredir=allure-results
+        run: pytest tests/test_ticket.py --alluredir=allure-results
 
       # Загрузка отчетов
       - name: Upload Results
