@@ -15,15 +15,10 @@ async def test_ticket_success():
         await ticket.fill_form("AB123", "economy", 10)
         await ticket.submit()
 
-        # Ждем появления элемента и текста "Итоговая цена"
-        result_locator = page.locator("#result-price")
-        await result_locator.wait_for(state="visible")
-
-        # Небольшая пауза, чтобы JS успел обновить текст
-        await asyncio.sleep(1)
+        # Ждем именно тот селектор, который у тебя в TicketPage
+        await page.wait_for_selector(ticket.result, state="visible", timeout=10000)
 
         result = await ticket.get_result()
-        assert result is not None
         assert "Итоговая цена" in result
         await browser.close()
 
@@ -44,9 +39,7 @@ async def test_ticket_variants(baggage, service_class, expected_price):
         await ticket.fill_form("AB123", service_class, baggage)
         await ticket.submit()
 
-        result_locator = page.locator("#result-price")
-        await result_locator.wait_for(state="visible")
-        await asyncio.sleep(1)
+        await page.wait_for_selector(ticket.result, state="visible", timeout=10000)
 
         result = await ticket.get_result()
         assert expected_price in result
@@ -66,16 +59,16 @@ async def test_ticket_negative_scenarios(passport, s_class, baggage, expected_su
         ticket = TicketPage(page)
 
         await ticket.open()
+        # Заполняем поля вручную через страницу, чтобы обойти fill_form если нужно
         if passport:
-            await ticket.page.fill(ticket.passport, passport)
-        if s_class:
-            await ticket.page.select_option(ticket.service_class, s_class)
-        await ticket.page.fill(ticket.baggage, str(baggage))
+            await page.fill(ticket.passport, passport)
+        await page.select_option(ticket.service_class, s_class)
+        await page.fill(ticket.baggage, str(baggage))
+
         await ticket.submit()
 
-        result_locator = page.locator("#result-price")
-        await result_locator.wait_for(state="visible")
-        await asyncio.sleep(1)
+        # Ждем появления текста ошибки в блоке результата
+        await page.wait_for_selector(ticket.result, state="visible", timeout=10000)
 
         result = await ticket.get_result()
         assert expected_substring in result.lower()
