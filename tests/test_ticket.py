@@ -15,8 +15,9 @@ async def test_ticket_success():
         await ticket.fill_form("AB123", "economy", 10)
         await ticket.submit()
 
-        # Ждем именно тот селектор, который у тебя в TicketPage
-        await page.wait_for_selector(ticket.result, state="visible", timeout=10000)
+        # ИСПРАВЛЕНИЕ: Ждем, пока в блоке результата появится слово "Итоговая"
+        # Это гарантирует, что расчет завершен
+        await page.wait_for_selector(f"{ticket.result}:has-text('Итоговая')", timeout=10000)
 
         result = await ticket.get_result()
         assert "Итоговая цена" in result
@@ -39,7 +40,8 @@ async def test_ticket_variants(baggage, service_class, expected_price):
         await ticket.fill_form("AB123", service_class, baggage)
         await ticket.submit()
 
-        await page.wait_for_selector(ticket.result, state="visible", timeout=10000)
+        # ИСПРАВЛЕНИЕ: Ждем, пока появится конкретная цена, которую мы ожидаем
+        await page.wait_for_selector(f"{ticket.result}:has-text('{expected_price}')", timeout=10000)
 
         result = await ticket.get_result()
         assert expected_price in result
@@ -68,7 +70,7 @@ async def test_ticket_negative_scenarios(passport, s_class, baggage, expected_su
         await ticket.submit()
 
         # Ждем появления текста ошибки в блоке результата
-        await page.wait_for_selector(ticket.result, state="visible", timeout=10000)
+        await page.wait_for_selector(f"{ticket.result}:has-text('{expected_substring}')", timeout=10000)
 
         result = await ticket.get_result()
         assert expected_substring in result.lower()
