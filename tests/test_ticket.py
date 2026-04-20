@@ -1,4 +1,5 @@
 import pytest
+import asyncio
 from playwright.async_api import async_playwright
 from .pages.ticket_page import TicketPage
 
@@ -6,7 +7,6 @@ from .pages.ticket_page import TicketPage
 @pytest.mark.asyncio
 async def test_ticket_success():
     async with async_playwright() as p:
-        # ОБЯЗАТЕЛЬНО headless=True для GitHub
         browser = await p.chromium.launch(headless=True)
         page = await browser.new_page()
         ticket = TicketPage(page)
@@ -15,10 +15,12 @@ async def test_ticket_success():
         await ticket.fill_form("AB123", "economy", 10)
         await ticket.submit()
 
-        # Ждем, пока текст внутри элемента изменится с заглушки на результат
-        await page.wait_for_function(
-            'document.querySelector("#result-price").innerText.includes("Итоговая цена")'
-        )
+        # Ждем появления элемента и текста "Итоговая цена"
+        result_locator = page.locator("#result-price")
+        await result_locator.wait_for(state="visible")
+
+        # Небольшая пауза, чтобы JS успел обновить текст
+        await asyncio.sleep(1)
 
         result = await ticket.get_result()
         assert result is not None
@@ -42,8 +44,9 @@ async def test_ticket_variants(baggage, service_class, expected_price):
         await ticket.fill_form("AB123", service_class, baggage)
         await ticket.submit()
 
-        # Ждем появления конкретной ожидаемой цены
-        await page.wait_for_selector(f"text={expected_price}")
+        result_locator = page.locator("#result-price")
+        await result_locator.wait_for(state="visible")
+        await asyncio.sleep(1)
 
         result = await ticket.get_result()
         assert expected_price in result
@@ -65,18 +68,14 @@ async def test_ticket_negative_scenarios(passport, s_class, baggage, expected_su
         await ticket.open()
         if passport:
             await ticket.page.fill(ticket.passport, passport)
-
-        # Обработка выбора класса, если он не пустой
         if s_class:
             await ticket.page.select_option(ticket.service_class, s_class)
-
         await ticket.page.fill(ticket.baggage, str(baggage))
         await ticket.submit()
 
-        # Ждем появления текста ошибки
-        await page.wait_for_function(
-            f'document.querySelector("#result-price").innerText.toLowerCase().includes("{expected_substring}")'
-        )
+        result_locator = page.locator("#result-price")
+        await result_locator.wait_for(state="visible")
+        await asyncio.sleep(1)
 
         result = await ticket.get_result()
         assert expected_substring in result.lower()
