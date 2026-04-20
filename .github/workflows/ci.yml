@@ -78,20 +78,35 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Download all results
+      - name: Download Ubuntu Results
         uses: actions/download-artifact@v4
         with:
-          path: all-results
+          name: allure-results-ubuntu-latest
+          path: allure-results
+        continue-on-error: true
 
-      # ПУНКТ 3: Генерация Allure отчета
+      - name: Download Windows Results
+        uses: actions/download-artifact@v4
+        with:
+          name: allure-results-windows-latest
+          path: allure-results
+        continue-on-error: true
+
+      - name: Download MacOS Results
+        uses: actions/download-artifact@v4
+        with:
+          name: allure-results-macos-latest
+          path: allure-results
+        continue-on-error: true
+
+      # Теперь Allure увидит общую папку allure-results
       - name: Build Allure Report
         uses: simple-elf/allure-report-action@master
         if: always()
         with:
-          allure_results: all-results
+          allure_results: allure-results
           allure_history: allure-history
 
-      # Публикация на GitHub Pages
       - name: Deploy to GitHub Pages
         if: always()
         uses: peaceiris/actions-gh-pages@v3
@@ -99,7 +114,6 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: allure-history
 
-      # ПУНКТ 4: Уведомление в Telegram
       - name: Send Telegram Message
         uses: appleboy/telegram-action@master
         if: always()
